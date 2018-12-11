@@ -6,29 +6,31 @@ open Xunit
 open Filters
 
 [<Fact>]
-let ``filterBySimplifyKalman without points returns empty list`` () =
+let ``filterBySimplifiedKalman without points returns empty list`` () =
     let source = []
 
-    let actual = filterBySimplifyKalman 1.0 1.0 source
+    let actual = filterBySimplifiedKalman 1.0 1.0 source
 
     Assert.Empty(actual)
 
+
 [<Fact>]
-let ``filterBySimplifyKalman with single point returns same list`` () =
+let ``filterBySimplifiedKalman with single point returns same list`` () =
     let source = [(45.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
     
-    let actual = filterBySimplifyKalman 1.0 1.0 source
+    let actual = filterBySimplifiedKalman 1.0 1.0 source
 
     let expected = [(45.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
     Assert.Equal<IEnumerable<(float * float * DateTimeOffset)>>(expected, actual)
 
+
 [<Fact>]
-let ``filterBySimplifyKalman with points filter coordinates`` () =
+let ``filterBySimplifiedKalman with points filter coordinates`` () =
     let source = [(45.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   (45.5, 0.5, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
                   (45.0, 1.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
 
-    let actual = List.toArray (filterBySimplifyKalman 1.0 1.0 source)
+    let actual = List.toArray (filterBySimplifiedKalman 1.0 1.0 source)
     let latitude1, longitude1, _ = actual.[1]
     let latitude2, longitude2, _ = actual.[2]
 

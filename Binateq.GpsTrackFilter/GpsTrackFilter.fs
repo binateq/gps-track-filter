@@ -55,5 +55,5 @@ type GpsTrackFilter() =
        |> removeZeroOrNegativeTimespans
        |> replaceZeroSpeedDrift zeroSpeedDrift
        |> removeOutlineSpeedValues outlineSpeed
-       |> filterBySimplifyKalman modelPrecision sensorPrecision
+       |> filterBySimplifiedKalman modelPrecision sensorPrecision
        |> List.toSeq

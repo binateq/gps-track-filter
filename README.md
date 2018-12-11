@@ -46,7 +46,7 @@ var gpsTrack = filter.Filter(rawGpsTrack);
 1. Zero/Negative timespan removing.
 2. Outline speed points removing.
 3. Zero speed drift smoothing.
-4. [Simplify Kalman](http://david.wf/kalmanfilter/) filtering.
+4. [Simplified Kalman](http://david.wf/kalmanfilter/) filtering.
 
 ## Parameters
 

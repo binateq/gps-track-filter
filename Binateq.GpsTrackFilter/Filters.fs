@@ -9,7 +9,7 @@
 /// <param name="σξ">Sigma ksi. Standard deviation of the moving model.</param>
 /// <param name="ση">Sigma eta. Standard deviation of the GPS sensor.</param>
 /// <param name="points">Points after f.</param>
-let filterBySimplifyKalman σξ ση points =
+let filterBySimplifiedKalman σξ ση points =
   let rec recursive_filter error p1 points =
     let square x = x * x
     let correct_error error =
