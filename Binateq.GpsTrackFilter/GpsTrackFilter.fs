@@ -37,7 +37,7 @@ type GpsTrackFilter() =
 
     
     /// <summary>
-    /// Gets or sets the precision of the GPS tracker of the Kalman's filter.
+    /// Gets or sets the precision of the GPS sensor of the Kalman's filter.
     /// </summary>
     member __.SensorPrecision with get () = sensorPrecision
                                  and set value = sensorPrecision <- value
@@ -50,7 +50,7 @@ type GpsTrackFilter() =
     /// <returns>
     /// Fixed track.
     /// </returns>
-    member this.Fix(points: IEnumerable<(float * float * DateTimeOffset)>): IEnumerable<(float * float * DateTimeOffset)>
+    member __.Filter(points: IEnumerable<(float * float * DateTimeOffset)>): IEnumerable<(float * float * DateTimeOffset)>
         = List.ofSeq points
        |> removeZeroOrNegativeTimespans
        |> replaceZeroSpeedDrift zeroSpeedDrift

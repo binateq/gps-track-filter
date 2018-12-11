@@ -14,6 +14,10 @@
     <PackageReleaseNotes>First version with tests is implemented</PackageReleaseNotes>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>\Binateq.GpsTrackFilter.XML</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="Filters.fs" />
     <Compile Include="Stabilizators.fs" />

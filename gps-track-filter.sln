@@ -7,6 +7,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Binateq.GpsTrackFilter", "B
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Binateq.GpsTrackFilter.Tests", "Binateq.GpsTrackFilter.Tests\Binateq.GpsTrackFilter.Tests.fsproj", "{9615CD09-F39F-4933-BCEF-915D2FD8F219}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binateq.GpsTrackFilter.Demo", "Binateq.GpsTrackFilter.Demo\Binateq.GpsTrackFilter.Demo.csproj", "{56D2989B-A0C5-4101-828E-CC509BA65FA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9615CD09-F39F-4933-BCEF-915D2FD8F219}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9615CD09-F39F-4933-BCEF-915D2FD8F219}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9615CD09-F39F-4933-BCEF-915D2FD8F219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
