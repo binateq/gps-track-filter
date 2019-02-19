@@ -1,7 +1,8 @@
 ﻿namespace Binateq.GpsTrackFilter
 
 open System
-open System.Collections.Generic
+open Microsoft.FSharp.Collections
+open Locations
 open Stabilizators
 open Filters
 
@@ -50,10 +51,29 @@ type GpsTrackFilter() =
     /// <returns>
     /// Fixed track.
     /// </returns>
-    member __.Filter(points: IEnumerable<(float * float * DateTimeOffset)>): IEnumerable<(float * float * DateTimeOffset)>
-        = List.ofSeq points
+    member __.Filter(points: seq<Location>): seq<Location> =
+           points
+        |> List.ofSeq
+        |> removeZeroOrNegativeTimespans
+        |> replaceZeroSpeedDrift zeroSpeedDrift
+        |> removeOutlineSpeedValues outlineSpeed
+        |> filterBySimplifiedKalman modelPrecision sensorPrecision
+        |> List.toSeq
+    
+    /// <summary>
+    /// Fixes a GPS track.
+    /// <summary>
+    /// <param name="points">Source GPS track with possible bad data.</param>
+    /// <returns>
+    /// Fixed track.
+    /// </returns>
+    member __.Filter(points: seq<(float * float * DateTimeOffset)>): seq<(float * float * DateTimeOffset)> =
+          points
+       |> Seq.map (fun (latitude, longitude, timestamp) -> Location(latitude, longitude, timestamp))
+       |> List.ofSeq
        |> removeZeroOrNegativeTimespans
        |> replaceZeroSpeedDrift zeroSpeedDrift
        |> removeOutlineSpeedValues outlineSpeed
        |> filterBySimplifiedKalman modelPrecision sensorPrecision
        |> List.toSeq
+       |> Seq.map (fun x -> (x.Latitude, x.Longitude, x.Timestamp))

@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Binateq.GpsTrackFilter", "Binateq.GpsTrackFilter\Binateq.GpsTrackFilter.fsproj", "{58613EC4-C154-4427-A770-B4BAEE8FE69E}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Binateq.GpsTrackFilter.Tests", "Binateq.GpsTrackFilter.Tests\Binateq.GpsTrackFilter.Tests.fsproj", "{9615CD09-F39F-4933-BCEF-915D2FD8F219}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Binateq.GpsTrackFilter.Demo", "Binateq.GpsTrackFilter.Demo\Binateq.GpsTrackFilter.Demo.csproj", "{56D2989B-A0C5-4101-828E-CC509BA65FA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binateq.GpsTrackFilter.Demo", "Binateq.GpsTrackFilter.Demo\Binateq.GpsTrackFilter.Demo.csproj", "{56D2989B-A0C5-4101-828E-CC509BA65FA0}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Binateq.GpsTrackFilter.Tests", "Binateq.GpsTrackFilter.Tests\Binateq.GpsTrackFilter.Tests.fsproj", "{CBC60F6D-6659-45DA-9E1B-C446AEE6A30B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{58613EC4-C154-4427-A770-B4BAEE8FE69E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58613EC4-C154-4427-A770-B4BAEE8FE69E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58613EC4-C154-4427-A770-B4BAEE8FE69E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9615CD09-F39F-4933-BCEF-915D2FD8F219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9615CD09-F39F-4933-BCEF-915D2FD8F219}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9615CD09-F39F-4933-BCEF-915D2FD8F219}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9615CD09-F39F-4933-BCEF-915D2FD8F219}.Release|Any CPU.Build.0 = Release|Any CPU
 		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56D2989B-A0C5-4101-828E-CC509BA65FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC60F6D-6659-45DA-9E1B-C446AEE6A30B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC60F6D-6659-45DA-9E1B-C446AEE6A30B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC60F6D-6659-45DA-9E1B-C446AEE6A30B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC60F6D-6659-45DA-9E1B-C446AEE6A30B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

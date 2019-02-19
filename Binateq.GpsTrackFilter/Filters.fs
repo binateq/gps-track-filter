@@ -1,5 +1,7 @@
 ﻿module Filters
 
+open Locations
+
 /// <summary>
 /// Filters points based on specified standard deviations with simplified Kalman filter.
 /// </summary>
@@ -9,8 +11,8 @@
 /// <param name="σξ">Sigma ksi. Standard deviation of the moving model.</param>
 /// <param name="ση">Sigma eta. Standard deviation of the GPS sensor.</param>
 /// <param name="points">Points after f.</param>
-let filterBySimplifiedKalman σξ ση points =
-  let rec recursive_filter error p1 points =
+let filterBySimplifiedKalman σξ ση (points: Location list) =
+  let rec recursive_filter error (p1: Location) points =
     let square x = x * x
     let correct_error error =
       let numerator = square ση * (square error + square σξ)
@@ -18,19 +20,19 @@ let filterBySimplifiedKalman σξ ση points =
     
       sqrt numerator/denominator
 
-    match p1, points with
-    | (latitude, longitude, _), (raw_latitude, raw_longitude, raw_timespan)::points ->
+    match points with
+    | (p2: Location)::points ->
       let next_latitude_error = correct_error (fst error)
       let next_longitude_error = correct_error (snd error)
 
       let K_latitude = square next_latitude_error/square ση
       let K_longitude = square next_longitude_error/square ση
 
-      let next_latitude = (1.0 - K_latitude) * latitude + K_latitude * raw_latitude
-      let next_longitude = (1.0 - K_longitude) * longitude + K_longitude * raw_longitude
+      let next_latitude = (1.0 - K_latitude) * p1.Latitude + K_latitude * p2.Latitude
+      let next_longitude = (1.0 - K_longitude) * p1.Longitude + K_longitude * p2.Longitude
 
       let next_error = (next_latitude_error, next_longitude_error)
-      let next_point = (next_latitude, next_longitude, raw_timespan)
+      let next_point = Location(next_latitude, next_longitude, p2.Timestamp)
 
       next_point::(recursive_filter next_error next_point points)
 

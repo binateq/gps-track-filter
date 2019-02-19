@@ -1,9 +1,10 @@
 ﻿module Stabilizators
 
 open System
+open Locations
 
 /// <summary>
-/// Calculates the distance in kilometers between two geographics points.
+/// Calculates the distance in kilometers between two geographic points.
 /// </summary>
 /// <returns>The distance in kilometers.</returns>
 let distance latitude1 longitude1 latitude2 longitude2 =
@@ -31,11 +32,9 @@ let distance latitude1 longitude1 latitude2 longitude2 =
 /// <summary>
 /// Calculates the velocity by coordinates and timestamp.
 /// </summary>
-let velocity (p1: float * float * DateTimeOffset) p2 =
-    let latitude1, longitude1, timestamp1 = p1
-    let latitude2, longitude2, timestamp2 = p2
-    let Δtime = (timestamp2 - timestamp1).TotalHours
-    let Δdistance = distance latitude1 longitude1 latitude2 longitude2
+let velocity<'Location when 'Location :> ILocation> (p1: 'Location) (p2: 'Location) =
+    let Δtime = (p2.Timestamp - p1.Timestamp).TotalHours
+    let Δdistance = distance p1.Latitude p1.Longitude p2.Latitude p2.Longitude
 
     Δdistance/Δtime
 
@@ -46,28 +45,20 @@ let velocity (p1: float * float * DateTimeOffset) p2 =
 /// <param name="predicate"></param>
 /// <param name="points"></param>
 let remove predicate points =
-    let rec compareAndRemove p1 points =
-        match points with
-        | p2::points ->
-            if (predicate p1 p2)
-            then compareAndRemove p1 points
-            else p2::(compareAndRemove p2 points)
-
-        | _ -> points
-
-    match points with
-    | p1::points -> p1::(compareAndRemove p1 points)
-    | _ -> points
+    if List.isEmpty points then points
+    else
+        let p1 = List.head points
+        p1::(points |> List.pairwise
+                    |> List.filter (fun (p1, p2) -> not (predicate p1 p2))
+                    |> List.map (fun (_, p2) -> p2))
 
 
 /// <summary>
-/// Removes points with zero or negative timespans.
+/// Removes points with zero or negative time spans.
 /// </summary>
-let removeZeroOrNegativeTimespans (points: (float * float * DateTimeOffset) list) =
-    let isZeroOrNegativeTimespan p1 p2 =
-        let _, _, timestamp1 = p1
-        let _, _, timestamp2 = p2
-        let Δtime = timestamp2 - timestamp1
+let removeZeroOrNegativeTimespans<'Location when 'Location :> ILocation> (points: 'Location list) =
+    let isZeroOrNegativeTimespan (p1: 'Location) (p2: 'Location) =
+        let Δtime = p2.Timestamp - p1.Timestamp
 
         Δtime <= TimeSpan.Zero
 
@@ -85,24 +76,46 @@ let removeOutlineSpeedValues hiLimit points =
 
     remove isOutlineSpeed points
 
-
 /// <summary>
 /// Replaces zero speed drift to zero.
 /// </summary>
-let replaceZeroSpeedDrift loLimit points =
-    let rec replace p1 points =
-        match points with
-        | p2::points ->
-            let velocity = velocity p1 p2
-            let latitude1, longitude1, _ = p1
-            let _, _, timestamp2 = p2
+let replaceZeroSpeedDrift<'Location when 'Location :> ILocation> loLimit (points: 'Location list) =
+    let isZeroDriftSpeed p1 p2 =
+        let velocity = velocity p1 p2
 
-            if velocity < loLimit
-            then (latitude1, longitude1, timestamp2)::(replace p1 points)
-            else p2::(replace p2 points)
+        velocity < loLimit
 
-        | _ -> points
+    remove isZeroDriftSpeed points
 
-    match points with
-    | p1::points -> p1::(replace p1 points)
-    | _ -> points
+//let replaceZeroSpeedDrift2<'Location when 'Location :> ILocation> loLimit (points: 'Location list) =
+//    let rec replace p1 points =
+//        match points with
+//        | p2::points ->
+//            let velocity = velocity p1 p2
+//            let latitude1, longitude1, _ = p1
+//            let _, _, timestamp2 = p2
+
+//            if velocity < loLimit
+//            then L(p1.Latitude, longitude1, timestamp2)::(replace p1 points)
+//            else p2::(replace p2 points)
+
+//        | _ -> points
+
+//    match points with
+//    | p1::points -> p1::(replace p1 points)
+//    | _ -> points
+
+
+//let remove2 predicate points =
+//    let rec compareAndRemove p1 points =
+//        match points with
+//        | p2::points ->
+//            if (predicate p1 p2)
+//            then compareAndRemove p1 points
+//            else p2::(compareAndRemove p2 points)
+
+//        | _ -> points
+
+//    match points with
+//    | p1::points -> p1::(compareAndRemove p1 points)
+//    | _ -> points

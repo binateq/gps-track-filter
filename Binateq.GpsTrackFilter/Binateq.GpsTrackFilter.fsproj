@@ -19,8 +19,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Filters.fs" />
+    <Compile Include="Locations.fs" />
     <Compile Include="Stabilizators.fs" />
+    <Compile Include="Filters.fs" />
     <Compile Include="GpsTrackFilter.fs" />
   </ItemGroup>
 
