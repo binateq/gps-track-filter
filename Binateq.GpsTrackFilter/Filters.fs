@@ -1,43 +1,89 @@
 ﻿module Filters
 
+open System
 open Locations
 
 /// <summary>
-/// Filters points based on specified standard deviations with simplified Kalman filter.
+/// Calculates the distance in kilometers between two geographic points.
 /// </summary>
-/// <remarks>
-/// http://david.wf/kalmanfilter/
-/// </remarks>
-/// <param name="σξ">Sigma ksi. Standard deviation of the moving model.</param>
-/// <param name="ση">Sigma eta. Standard deviation of the GPS sensor.</param>
-/// <param name="points">Points after f.</param>
-let filterBySimplifiedKalman σξ ση (points: Location list) =
-  let rec recursive_filter error (p1: Location) points =
-    let square x = x * x
-    let correct_error error =
-      let numerator = square ση * (square error + square σξ)
-      let denominator = square ση + square error + square σξ
-    
-      sqrt numerator/denominator
+/// <returns>The distance in kilometers.</returns>
+let distance latitude1 longitude1 latitude2 longitude2 =
+    let radian x = x * Math.PI/180.0
 
+    // https://en.wikipedia.org/wiki/Haversine_formula
+    let hav x = Math.Sin(x/2.0) ** 2.0
+    
+    // https://en.wikipedia.org/wiki/World_Geodetic_System
+    let earthEquatorialRadius = 6378.137
+    let earthPolarRadius = 6356.752
+    let averageEarthRadius = (earthEquatorialRadius + earthPolarRadius)/2.0
+
+    let φ1 = radian latitude1
+    let λ1 = radian longitude1
+
+    let φ2 = radian latitude2
+    let λ2 = radian longitude2
+
+    let h = hav (φ2 - φ1) + cos φ1 * cos φ2 * hav (λ2 - λ1)
+
+    2.0 * asin (sqrt h) * averageEarthRadius
+
+
+/// <summary>
+/// Calculates the velocity by coordinates and timestamp.
+/// </summary>
+let velocity<'Location when 'Location :> ILocation> (p1: 'Location) (p2: 'Location) =
+    let Δtime = (p2.Timestamp - p1.Timestamp).TotalHours
+    let Δdistance = distance p1.Latitude p1.Longitude p2.Latitude p2.Longitude
+
+    Δdistance/Δtime
+
+
+/// <summary>
+/// Removes points matching with specified predicate.
+/// </summary>
+/// <param name="predicate"></param>
+/// <param name="points"></param>
+let remove predicate points =
     match points with
-    | (p2: Location)::points ->
-      let next_latitude_error = correct_error (fst error)
-      let next_longitude_error = correct_error (snd error)
+    | [] -> []
+    | p1::_ -> let filtered = points
+                           |> List.pairwise
+                           |> List.filter (fun (p1, p2) -> not (predicate p1 p2))
+                           |> List.map (fun (_, p2) -> p2)
+               p1::filtered
 
-      let K_latitude = square next_latitude_error/square ση
-      let K_longitude = square next_longitude_error/square ση
 
-      let next_latitude = (1.0 - K_latitude) * p1.Latitude + K_latitude * p2.Latitude
-      let next_longitude = (1.0 - K_longitude) * p1.Longitude + K_longitude * p2.Longitude
+/// <summary>
+/// Removes points with zero or negative time spans.
+/// </summary>
+let removeZeroOrNegativeTimespans<'Location when 'Location :> ILocation> (points: 'Location list) =
+    let isZeroOrNegativeTimespan (p1: 'Location) (p2: 'Location) =
+        let Δtime = p2.Timestamp - p1.Timestamp
 
-      let next_error = (next_latitude_error, next_longitude_error)
-      let next_point = Location(next_latitude, next_longitude, p2.Timestamp)
+        Δtime <= TimeSpan.Zero
 
-      next_point::(recursive_filter next_error next_point points)
+    remove isZeroOrNegativeTimespan points
 
-    | _ -> points
-    
-  match points with
-  | [] -> []
-  | p1::points -> p1::(recursive_filter (ση, ση) p1 points)
+
+/// <summary>
+/// Removes points with outlined speed.
+/// </summary>
+let removeOutlineSpeedValues hiLimit points =
+    let isOutlineSpeed p1 p2 =
+        let velocity = velocity p1 p2
+
+        velocity > hiLimit
+
+    remove isOutlineSpeed points
+
+/// <summary>
+/// Replaces zero speed drift to zero.
+/// </summary>
+let replaceZeroSpeedDrift<'Location when 'Location :> ILocation> loLimit (points: 'Location list) =
+    let isZeroDriftSpeed p1 p2 =
+        let velocity = velocity p1 p2
+
+        velocity < loLimit
+
+    remove isZeroDriftSpeed points

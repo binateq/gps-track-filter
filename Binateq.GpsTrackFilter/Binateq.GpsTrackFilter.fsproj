@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <Compile Include="Locations.fs" />
-    <Compile Include="Stabilizators.fs" />
     <Compile Include="Filters.fs" />
+    <Compile Include="Kalman.fs" />
     <Compile Include="GpsTrackFilter.fs" />
   </ItemGroup>
 

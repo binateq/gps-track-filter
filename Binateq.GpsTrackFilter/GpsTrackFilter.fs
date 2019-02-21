@@ -3,8 +3,8 @@
 open System
 open Microsoft.FSharp.Collections
 open Locations
-open Stabilizators
 open Filters
+open Kalman
 
 /// <summary>
 /// Implements a few methods to fix bad GPS data.
@@ -57,7 +57,7 @@ type GpsTrackFilter() =
         |> removeZeroOrNegativeTimespans
         |> replaceZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
-        |> filterBySimplifiedKalman modelPrecision sensorPrecision
+        |> smoothBySimplifiedKalman modelPrecision sensorPrecision
         |> List.toSeq
     
     /// <summary>
@@ -74,6 +74,6 @@ type GpsTrackFilter() =
        |> removeZeroOrNegativeTimespans
        |> replaceZeroSpeedDrift zeroSpeedDrift
        |> removeOutlineSpeedValues outlineSpeed
-       |> filterBySimplifiedKalman modelPrecision sensorPrecision
+       |> smoothBySimplifiedKalman modelPrecision sensorPrecision
        |> List.toSeq
        |> Seq.map (fun x -> (x.Latitude, x.Longitude, x.Timestamp))

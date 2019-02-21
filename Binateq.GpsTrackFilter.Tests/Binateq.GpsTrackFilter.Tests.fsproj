@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Compile Include="FiltersTests.fs" />
-    <Compile Include="StabilizatorsTests.fs" />
+    <Compile Include="KalmanTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
