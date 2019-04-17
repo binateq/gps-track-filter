@@ -51,4 +51,14 @@ let internal replaceZeroSpeedDrift loLimit points =
 
         velocity < loLimit
 
-    remove isZeroDriftSpeed points
+    let rec filter p1 points =
+        match points with
+        | [] -> [p1]
+        | [p2] -> if isZeroDriftSpeed p1 p2 then [p2] else p1::[p2]
+        | p2::points -> if isZeroDriftSpeed p1 p2
+                        then filter p2 points
+                        else p1::filter p2 points
+
+    match points with
+    | p1::points -> filter p1 points
+    | _ -> points

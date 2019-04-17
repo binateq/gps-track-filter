@@ -19,7 +19,7 @@ let ``distance between Moscow and Saint Petersburg approximately equals 634km`` 
    Assert.Equal(expected, actual, 0)
 
 [<Fact>]
-let ``removeZeroOrNegativeTimespans without points returns empty list`` () =
+let ``removeZeroOrNegativeTimespans - without points - returns empty list`` () =
     let source = []
 
     let actual = removeZeroOrNegativeTimespans source
@@ -27,7 +27,7 @@ let ``removeZeroOrNegativeTimespans without points returns empty list`` () =
     Assert.Empty(actual)
 
 [<Fact>]
-let ``removeZeroOrNegativeTimespans with single point returns same list`` () =
+let ``removeZeroOrNegativeTimespans - with single point - returns same list`` () =
     let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
 
     let actual = removeZeroOrNegativeTimespans source
@@ -36,7 +36,7 @@ let ``removeZeroOrNegativeTimespans with single point returns same list`` () =
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 [<Fact>]
-let ``removeZeroOrNegativeTimespans with zero timespan removes point`` () =
+let ``removeZeroOrNegativeTimespans - with zero timespan - removes point`` () =
     let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
                   SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
                   SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
@@ -48,7 +48,7 @@ let ``removeZeroOrNegativeTimespans with zero timespan removes point`` () =
     Assert.Equal<seq<SensorItem>>(expected, actual)
     
 [<Fact>]
-let ``removeZeroOrNegativeTimespans with negative timespan removes point`` () =
+let ``removeZeroOrNegativeTimespans - with negative timespan - removes point`` () =
     let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
                   SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
@@ -60,7 +60,7 @@ let ``removeZeroOrNegativeTimespans with negative timespan removes point`` () =
     Assert.Equal<seq<SensorItem>>(expected, actual)
     
 [<Fact>]
-let ``removeZeroOrNegativeTimespans with positime timespans returns same list`` () =
+let ``removeZeroOrNegativeTimespans - with positime timespans - returns same list`` () =
     let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
                   SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
@@ -141,7 +141,7 @@ let ``replaceZeroSpeedDrift with very small drift removes drift points`` () =
 
     let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
-    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
+    let expected = [SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
                     SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 

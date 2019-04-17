@@ -5,14 +5,14 @@
     <Authors>Mark Shevchenko</Authors>
     <Company>Binateq</Company>
     <Description>Implements a few methods of stabilization and filtration of GPS tracks.</Description>
-    <Copyright>Copyright (c) 2018 Binateq</Copyright>
+    <Copyright>Copyright (c) 2018–2019 Binateq</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/binateq/gps-track-filter</PackageProjectUrl>
     <RepositoryUrl>https://github.com/binateq/gps-track-filter.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>GPS, filtration, stabilization, Kalman</PackageTags>
-    <PackageReleaseNotes>Append speed/heading</PackageReleaseNotes>
-    <Version>1.2.0</Version>
+    <PackageReleaseNotes>Fix bug with zero speed drift.</PackageReleaseNotes>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
