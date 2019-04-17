@@ -5,6 +5,7 @@ open Microsoft.FSharp.Collections
 open Types
 open Filters
 open Kalman
+open System.Collections.Generic
 
 type ILocation =
     abstract member Latitude: float
@@ -87,7 +88,7 @@ type GpsTrackFilter() =
     /// <returns>
     /// Fixed track.
     /// </returns>
-    member __.Filter(points: seq<Location>): seq<Location> =
+    member __.Filter(points: seq<Location>): IReadOnlyList<Location> =
            points
         |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, 0.0, 0.0, x.Timestamp))
         |> List.ofSeq
@@ -95,8 +96,8 @@ type GpsTrackFilter() =
         |> replaceZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
         |> smoothBySimplifiedKalman modelPrecision sensorPrecision
-        |> List.toSeq
-        |> Seq.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
+        |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
+        :> IReadOnlyList<Location>
     
 
     /// <summary>
@@ -106,7 +107,7 @@ type GpsTrackFilter() =
     /// <returns>
     /// Fixed track.
     /// </returns>
-    member __.Filter(points: seq<(float * float * DateTimeOffset)>): seq<(float * float * DateTimeOffset)> =
+    member __.Filter(points: seq<(float * float * DateTimeOffset)>): IReadOnlyList<(float * float * DateTimeOffset)> =
            points
         |> Seq.map (fun (latitude, longitude, timestamp) -> SensorItem(latitude, longitude, 0.0, 0.0, timestamp))
         |> List.ofSeq
@@ -114,8 +115,8 @@ type GpsTrackFilter() =
         |> replaceZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
         |> smoothBySimplifiedKalman modelPrecision sensorPrecision
-        |> List.toSeq
-        |> Seq.map (fun x -> (x.Latitude, x.Longitude, x.Timestamp))
+        |> List.map (fun x -> (x.Latitude, x.Longitude, x.Timestamp))
+        :> IReadOnlyList<(float * float * DateTimeOffset)>
 
 
     /// <summary>
@@ -125,7 +126,7 @@ type GpsTrackFilter() =
     /// <returns>
     /// Fixed track.
     /// </returns>
-    member __.Filter(points: seq<DirectedLocation>): seq<Location> =
+    member __.Filter(points: seq<DirectedLocation>): IReadOnlyList<Location> =
            points
         |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, x.Speed, x.Heading, x.Timestamp))
         |> List.ofSeq
@@ -133,5 +134,5 @@ type GpsTrackFilter() =
         |> replaceZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
         |> smoothByKalman modelPrecision sensorPrecision
-        |> List.toSeq
-        |> Seq.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
+        |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
+        :> IReadOnlyList<Location>
