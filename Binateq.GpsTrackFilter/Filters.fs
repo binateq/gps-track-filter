@@ -60,5 +60,5 @@ let internal replaceZeroSpeedDrift loLimit points =
                         else p1::filter p2 points
 
     match points with
-    | p1::points -> filter p1 points
+    | p1::p2::points -> p1::filter p2 points
     | _ -> points

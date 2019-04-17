@@ -136,13 +136,24 @@ let ``replaceZeroSpeedDrift with single point returns same list`` () =
 [<Fact>]
 let ``replaceZeroSpeedDrift with very small drift removes drift points`` () =
     let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
+                  SensorItem(46.95, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
                   SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
 
     let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
-    let expected = [SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
+    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                     SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    Assert.Equal<seq<SensorItem>>(expected, actual)
+
+[<Fact>]
+let ``replaceZeroSpeedDrift with very small drift keeps two end points`` () =
+    let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
+                  SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"))]
+
+    let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
+
+    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
+                    SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"))]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 [<Fact>]
