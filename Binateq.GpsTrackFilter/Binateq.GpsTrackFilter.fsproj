@@ -11,10 +11,10 @@
     <RepositoryUrl>https://github.com/binateq/gps-track-filter.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>GPS, filtration, stabilization, Kalman</PackageTags>
-    <PackageReleaseNotes>Fix first repeated track point</PackageReleaseNotes>
-    <Version>1.4.1</Version>
-    <AssemblyVersion>1.4.1.0</AssemblyVersion>
-    <FileVersion>1.4.1.0</FileVersion>
+    <PackageReleaseNotes>Fix bug with a few sequence zeor or negative timespans</PackageReleaseNotes>
+    <Version>1.4.2</Version>
+    <AssemblyVersion>1.4.2.0</AssemblyVersion>
+    <FileVersion>1.4.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

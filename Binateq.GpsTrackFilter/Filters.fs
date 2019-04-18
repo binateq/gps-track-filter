@@ -28,7 +28,16 @@ let internal removeZeroOrNegativeTimespans points =
 
         Δtime <= TimeSpan.Zero
 
-    remove isZeroOrNegativeTimespan points
+    let rec filter p1 points =
+        match points with
+        | [] -> []
+        | p2::points -> if isZeroOrNegativeTimespan p1 p2
+                        then filter p1 points
+                        else p2::filter p2 points
+
+    match points with
+    | [] -> []
+    | p1::points -> p1::filter p1 points
 
 
 /// <summary>
