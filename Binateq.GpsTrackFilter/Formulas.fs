@@ -35,6 +35,45 @@ let internal distance latitude1 longitude1 latitude2 longitude2 =
 
 
 /// <summary>
+/// Calculates days before specified date.
+/// </summary>
+/// <param name="year">Year.</param>
+/// <param name="month">Month.</param>
+/// <param name="day">Day.</param>
+/// <returns>The count of days before the date.</returns>
+let internal daysBeforeDate year month day =
+    let daysBeforeMonth month = match month with
+        | 1 -> 0
+        | 2 -> 31
+        | 3 -> 59
+        | 4 -> 90
+        | 5 -> 120
+        | 6 -> 151
+        | 7 -> 181
+        | 8 -> 212
+        | 9 -> 243
+        | 10 -> 273
+        | 11 -> 304
+        | 12 -> 334
+        | _ -> raise (ArgumentException("Invalid month."))
+
+    let daysBeforeYear year = (year - 1) * 365 + (year - 1)/4 - (year - 1)/100 + (year - 1)/400
+
+    let isLeap year = year % 4 = 0 && ((year % 100 <> 0) || (year % 400 = 0))
+    let daysBefore = day + daysBeforeMonth month + daysBeforeYear year - 1
+
+    if isLeap year
+    then daysBefore + 1
+    else daysBefore
+
+
+let internal secondsAtDateTime year month day hour minute second =
+    let days = daysBeforeDate year month day
+    
+    (24L * 3600L * int64(days)) + 3600L * int64(hour) + 60L * int64(minute) + int64(second)
+
+
+/// <summary>
 /// Calculates the velocity in kilometers per hour by coordinates and timestamps.
 /// </summary>
 let internal velocity (p1: SensorItem) (p2: SensorItem) =
@@ -47,8 +86,10 @@ let internal velocity (p1: SensorItem) (p2: SensorItem) =
     // at System.DateTimeOffset.op_Subtraction (System.DateTimeOffset left, System.DateTimeOffset right)
     // at Formulas.velocity(Types+SensorItem p1, Types+SensorItem p2)
     // let Δtime = (p2.Timestamp - p1.Timestamp).TotalHours
-    let Δmilliseconds = float(p2.Timestamp.ToUnixTimeMilliseconds() - p1.Timestamp.ToUnixTimeMilliseconds())
-    let Δtime = TimeSpan.FromMilliseconds(Δmilliseconds).TotalHours
+    let secondsAt (x: DateTimeOffset) =
+        secondsAtDateTime x.Year x.Month x.Day x.Hour x.Minute x.Second
+    let Δseconds = float(secondsAt p2.Timestamp - secondsAt p1.Timestamp)
+    let Δtime = TimeSpan.FromSeconds(Δseconds).TotalHours
     let Δdistance = distance p1.Latitude p1.Longitude p2.Latitude p2.Longitude
 
     Δdistance/Δtime

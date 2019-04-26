@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="FormulasTests.fs" />
     <Compile Include="FiltersTests.fs" />
     <Compile Include="KalmanTests.fs" />
     <Compile Include="Program.fs" />
