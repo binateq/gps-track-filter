@@ -38,7 +38,17 @@ let internal distance latitude1 longitude1 latitude2 longitude2 =
 /// Calculates the velocity in kilometers per hour by coordinates and timestamps.
 /// </summary>
 let internal velocity (p1: SensorItem) (p2: SensorItem) =
-    let Δtime = (p2.Timestamp - p1.Timestamp).TotalHours
+    // Fix the bag at Android's Mono:
+    //    System.ArgumentOutOfRangeException: Ticks must be between DateTime.MinValue.Ticks and DateTime.MaxValue.Ticks.
+    //                                        Parameter name: ticks
+    // at System.DateTime..ctor (System.Int64 ticks, System.DateTimeKind kind)
+    // at System.DateTime.SpecifyKind (System.DateTime value, System.DateTimeKind kind)
+    // at System.DateTimeOffset.get_UtcDateTime ()
+    // at System.DateTimeOffset.op_Subtraction (System.DateTimeOffset left, System.DateTimeOffset right)
+    // at Formulas.velocity(Types+SensorItem p1, Types+SensorItem p2)
+    // let Δtime = (p2.Timestamp - p1.Timestamp).TotalHours
+    let Δmilliseconds = float(p2.Timestamp.ToUnixTimeMilliseconds() - p1.Timestamp.ToUnixTimeMilliseconds())
+    let Δtime = TimeSpan.FromMilliseconds(Δmilliseconds).TotalHours
     let Δdistance = distance p1.Latitude p1.Longitude p2.Latitude p2.Longitude
 
     Δdistance/Δtime
