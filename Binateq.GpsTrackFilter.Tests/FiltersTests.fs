@@ -16,7 +16,7 @@ let ``removeZeroOrNegativeTimespans - without points - returns empty list`` () =
 
 
 [<Fact>]
-let ``removeZeroOrNegativeTimespans - with single point - returns same list`` () =
+let ``removeZeroOrNegativeTimespans - with single point - returns single point`` () =
     let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
 
     let actual = removeZeroOrNegativeTimespans source

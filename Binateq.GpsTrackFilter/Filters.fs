@@ -4,6 +4,7 @@ open System
 open Types
 open Formulas
 
+
 /// <summary>
 /// Removes points matching with specified predicate.
 /// </summary>
@@ -19,21 +20,16 @@ let internal remove predicate points =
                p1::filtered
 
 
-/// <summary>
-/// Removes points with zero or negative time spans.
-/// </summary>
+// <summary>
+// Removes points with zero or negative time spans.
+// </summary>
 let internal removeZeroOrNegativeTimespans points =
-    let isZeroOrNegativeTimespan (p1: SensorItem) (p2: SensorItem) =
-        let Δtime = p2.Timestamp - p1.Timestamp
-
-        Δtime <= TimeSpan.Zero
-
-    let rec filter p1 points =
+    let rec filter (p1: SensorItem) points =
         match points with
         | [] -> []
-        | p2::points -> if isZeroOrNegativeTimespan p1 p2
-                        then filter p1 points
-                        else p2::filter p2 points
+        | (p2:SensorItem)::points -> if p2.Timestamp - p1.Timestamp > TimeSpan.Zero
+                                     then p2::filter p2 points
+                                     else filter p1 points
 
     match points with
     | [] -> []
