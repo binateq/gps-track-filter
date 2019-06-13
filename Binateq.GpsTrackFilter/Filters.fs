@@ -5,35 +5,20 @@ open Types
 open Formulas
 
 
-/// <summary>
-/// Removes points matching with specified predicate.
-/// </summary>
-/// <param name="predicate"></param>
-/// <param name="points"></param>
-let internal remove predicate points =
-    match points with
-    | [] -> []
-    | p1::_ -> let filtered = points
-                           |> List.pairwise
-                           |> List.filter (fun (p1, p2) -> not (predicate p1 p2))
-                           |> List.map (fun (_, p2) -> p2)
-               p1::filtered
-
-
 // <summary>
 // Removes points with zero or negative time spans.
 // </summary>
 let internal removeZeroOrNegativeTimespans points =
     let rec filter (p1: SensorItem) points =
         match points with
-        | [] -> []
-        | (p2:SensorItem)::points -> if p2.Timestamp - p1.Timestamp > TimeSpan.Zero
-                                     then p2::filter p2 points
-                                     else filter p1 points
+        | (p2: SensorItem)::tail -> if p2.Timestamp - p1.Timestamp > TimeSpan.Zero
+                                     then p2::filter p2 tail
+                                     else filter p1 tail
+        | _ -> points
 
     match points with
-    | [] -> []
-    | p1::points -> p1::filter p1 points
+    | p1::tail -> p1::filter p1 tail
+    | _ -> points
 
 
 /// <summary>
@@ -45,12 +30,22 @@ let internal removeOutlineSpeedValues hiLimit points =
 
         velocity > hiLimit
 
-    remove isOutlineSpeed points
+    let rec filter p1 points =
+        match points with
+        | p2::tail -> if isOutlineSpeed p1 p2
+                        then filter p1 tail
+                        else p2::filter p2 tail
+        | _ -> points
+
+    match points with
+    | p1::tail -> p1::filter p1 tail
+    | _ -> points
+
 
 /// <summary>
 /// Replaces zero speed drift to zero.
 /// </summary>
-let internal replaceZeroSpeedDrift loLimit points =
+let internal removeZeroSpeedDrift loLimit points =
     let isZeroDriftSpeed p1 p2 =
         let velocity = velocity p1 p2
 
@@ -59,11 +54,13 @@ let internal replaceZeroSpeedDrift loLimit points =
     let rec filter p1 points =
         match points with
         | [] -> [p1]
-        | [p2] -> if isZeroDriftSpeed p1 p2 then [p2] else p1::[p2]
-        | p2::points -> if isZeroDriftSpeed p1 p2
-                        then filter p2 points
-                        else p1::filter p2 points
+        | [p2] -> if isZeroDriftSpeed p1 p2
+                  then [p2]
+                  else p1::[p2]
+        | p2::tail -> if isZeroDriftSpeed p1 p2
+                        then filter p2 tail
+                        else p1::filter p2 tail
 
     match points with
-    | p1::p2::points -> p1::filter p2 points
+    | p1::p2::tail -> p1::filter p2 tail
     | _ -> points

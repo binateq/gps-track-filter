@@ -93,7 +93,7 @@ type GpsTrackFilter() =
         |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, 0.0, 0.0, x.Timestamp))
         |> List.ofSeq
         |> removeZeroOrNegativeTimespans
-        |> replaceZeroSpeedDrift zeroSpeedDrift
+        |> removeZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
         |> smoothBySimplifiedKalman modelPrecision sensorPrecision
         |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
@@ -112,7 +112,7 @@ type GpsTrackFilter() =
         |> Seq.map (fun (latitude, longitude, timestamp) -> SensorItem(latitude, longitude, 0.0, 0.0, timestamp))
         |> List.ofSeq
         |> removeZeroOrNegativeTimespans
-        |> replaceZeroSpeedDrift zeroSpeedDrift
+        |> removeZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
         |> smoothBySimplifiedKalman modelPrecision sensorPrecision
         |> List.map (fun x -> (x.Latitude, x.Longitude, x.Timestamp))
@@ -131,7 +131,7 @@ type GpsTrackFilter() =
         |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, x.Speed, x.Heading, x.Timestamp))
         |> List.ofSeq
         |> removeZeroOrNegativeTimespans
-        |> replaceZeroSpeedDrift zeroSpeedDrift
+        |> removeZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
         |> smoothByKalman modelPrecision sensorPrecision
         |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))

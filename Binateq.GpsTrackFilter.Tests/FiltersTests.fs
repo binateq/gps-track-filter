@@ -83,7 +83,7 @@ let oneDegreeOfMeridianInKm = 111.32
     
 
 [<Fact>]
-let ``removeOutlineSpeedValues without points returns empty list`` () =
+let ``removeOutlineSpeedValues - without points - returns empty list`` () =
     let source = []
 
     let actual = removeOutlineSpeedValues oneDegreeOfMeridianInKm source
@@ -92,7 +92,7 @@ let ``removeOutlineSpeedValues without points returns empty list`` () =
 
 
 [<Fact>]
-let ``removeOutlineSpeedValues with single point returns same list`` () =
+let ``removeOutlineSpeedValues - with single point - returns same list`` () =
     let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
 
     let actual = removeOutlineSpeedValues oneDegreeOfMeridianInKm source
@@ -102,7 +102,7 @@ let ``removeOutlineSpeedValues with single point returns same list`` () =
 
 
 [<Fact>]
-let ``removeOutlineSpeedValues with outline speed removes point`` () =
+let ``removeOutlineSpeedValues - with outline speed - removes point`` () =
     let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(46.1, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
                   SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
@@ -115,7 +115,7 @@ let ``removeOutlineSpeedValues with outline speed removes point`` () =
 
 
 [<Fact>]
-let ``removeOutlineSpeedValues without outline speed returns same list`` () =
+let ``removeOutlineSpeedValues - without outline speed - returns same list`` () =
     let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(46.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
                   SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
@@ -129,31 +129,31 @@ let ``removeOutlineSpeedValues without outline speed returns same list`` () =
 
 
 [<Fact>]
-let ``replaceZeroSpeedDrift without points returns empty list`` () =
+let ``removeZeroSpeedDrift - without points - returns empty list`` () =
     let source = []
 
-    let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
+    let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
     Assert.Empty(actual)
 
 
 [<Fact>]
-let ``replaceZeroSpeedDrift with single point returns same list`` () =
+let ``removeZeroSpeedDrift - with single point - returns same list`` () =
     let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
 
-    let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
+    let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
     let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
-let ``replaceZeroSpeedDrift with very small drift removes drift points`` () =
+let ``removeZeroSpeedDrift - with very small drift - removes drift points`` () =
     let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(46.95, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
                   SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
 
-    let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
+    let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
     let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                     SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
@@ -161,11 +161,11 @@ let ``replaceZeroSpeedDrift with very small drift removes drift points`` () =
 
 
 [<Fact>]
-let ``replaceZeroSpeedDrift with very small drift keeps two end points`` () =
+let ``removeZeroSpeedDrift - with very small drift - keeps two end points`` () =
     let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"))]
 
-    let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
+    let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
     let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                     SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"))]
@@ -173,12 +173,12 @@ let ``replaceZeroSpeedDrift with very small drift keeps two end points`` () =
 
 
 [<Fact>]
-let ``replaceZeroSpeedDrift without drift returns same list`` () =
+let ``removeZeroSpeedDrift - without drift - returns same list`` () =
     let source = [SensorItem(45.00, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(45.15, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
                   SensorItem(47.00, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
 
-    let actual = replaceZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
+    let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
     let expected = [SensorItem(45.00, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                     SensorItem(45.15, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
