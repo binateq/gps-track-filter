@@ -52,6 +52,19 @@ let ``removeZeroOrNegativeTimespans - with negative timespan - removes point`` (
     
 
 [<Fact>]
+let ``removeZeroOrNegativeTimespans - with too large positive timespan - removes point`` () =
+    let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
+                  SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:08:15+03:00"));
+                  SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+
+    let actual = removeZeroOrNegativeTimespans source
+
+    let expected = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
+                    SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+    Assert.Equal<seq<SensorItem>>(expected, actual)
+    
+
+[<Fact>]
 let ``removeZeroOrNegativeTimespans - with positime timespans - returns same list`` () =
     let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
                   SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
