@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>\Binateq.GpsTrackFilter.XML</DocumentationFile>
+    <DocumentationFile>Binateq.GpsTrackFilter.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
