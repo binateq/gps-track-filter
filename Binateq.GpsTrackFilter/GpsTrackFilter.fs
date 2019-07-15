@@ -57,33 +57,33 @@ type GpsTrackFilter() =
     /// Gets or sets the minimal valid velocity for the filter of zero speed drift.
     /// </summary>
     member __.ZeroSpeedDrift with get () = zeroSpeedDrift
-                                and set value = zeroSpeedDrift <- value
+                              and set value = zeroSpeedDrift <- value
 
     
     /// <summary>
     /// Gets or sets the maximal valid velocity for the filter of outline speed.
     /// </summary>
     member __.OutlineSpeed with get () = outlineSpeed
-                              and set value = outlineSpeed <- value
+                            and set value = outlineSpeed <- value
 
     
     /// <summary>
     /// Gets or sets the precision of the moving model of the Kalman's filter.
     /// </summary>
     member __.ModelPrecision with get () = modelPrecision
-                                and set value = modelPrecision <- value
+                              and set value = modelPrecision <- value
 
     
     /// <summary>
     /// Gets or sets the precision of the GPS sensor of the Kalman's filter.
     /// </summary>
     member __.SensorPrecision with get () = sensorPrecision
-                                 and set value = sensorPrecision <- value
+                               and set value = sensorPrecision <- value
 
     
     /// <summary>
     /// Fixes a GPS track.
-    /// <summary>
+    /// </summary>
     /// <param name="points">Source GPS track with possible bad data.</param>
     /// <returns>
     /// Fixed track.
@@ -102,7 +102,7 @@ type GpsTrackFilter() =
 
     /// <summary>
     /// Fixes a GPS track.
-    /// <summary>
+    /// </summary>
     /// <param name="points">Source GPS track with possible bad data.</param>
     /// <returns>
     /// Fixed track.
@@ -121,7 +121,7 @@ type GpsTrackFilter() =
 
     /// <summary>
     /// Fixes a GPS track.
-    /// <summary>
+    /// </summary>
     /// <param name="points">Source GPS track with possible bad data.</param>
     /// <returns>
     /// Fixed track.

@@ -51,22 +51,22 @@ let internal velocity (p1: SensorItem) (p2: SensorItem) =
 /// <param name="longitude">The longitude of meridian to projection.</param>
 /// <param name="speed">The velocity module in meters per second.</param>
 /// <param name="heading">The velocity direction relatied to North in degrees.</param>
-let internal projectSpeedOnAxis latitude longitude speed heading =
+let internal project latitude longitude speed heading =
     let cartesianAngleFromHeading =
-        let flip angle = 360.0 - angle
+        let flipHorizontal angle = 360.0 - angle
         let rotateClockwise90 angle = (270.0 + angle) % 360.0
         
-        flip >> rotateClockwise90
+        flipHorizontal >> rotateClockwise90
 
-    let velocityAngle = radian (cartesianAngleFromHeading heading)
+    let angle = radian (cartesianAngleFromHeading heading)
 
     let kilometersPerHour metersPerSecond = 3.6 * metersPerSecond
-    let velocityKmph = kilometersPerHour speed
+    let velocity = kilometersPerHour speed
 
-    let velocityKmphLongitude = velocityKmph * cos velocityAngle
-    let velocityKmphLatitude = velocityKmph * sin velocityAngle
+    let velocityLongitude = velocity * cos angle
+    let velocityLatitude = velocity * sin angle
 
     let kilometersPerLongitudeGrade = distance latitude longitude latitude (longitude + 1.0)
     let kilometersPerLatitudeGrade = distance latitude longitude (latitude + 1.0) longitude
 
-    (velocityKmphLatitude / kilometersPerLatitudeGrade, velocityKmphLongitude / kilometersPerLongitudeGrade)
+    (velocityLatitude / kilometersPerLatitudeGrade, velocityLongitude / kilometersPerLongitudeGrade)

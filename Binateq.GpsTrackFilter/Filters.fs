@@ -34,8 +34,8 @@ let internal removeOutlineSpeedValues hiLimit points =
     let rec filter p1 points =
         match points with
         | p2::tail -> if isOutlineSpeed p1 p2
-                        then filter p1 tail
-                        else p2::filter p2 tail
+                      then filter p1 tail
+                      else p2::filter p2 tail
         | _ -> points
 
     match points with
@@ -44,7 +44,7 @@ let internal removeOutlineSpeedValues hiLimit points =
 
 
 /// <summary>
-/// Replaces zero speed drift to zero.
+/// Removes points with zero speed drift.
 /// </summary>
 let internal removeZeroSpeedDrift loLimit points =
     let isZeroDriftSpeed p1 p2 =
@@ -59,8 +59,8 @@ let internal removeZeroSpeedDrift loLimit points =
                   then [p2]
                   else p1::[p2]
         | p2::tail -> if isZeroDriftSpeed p1 p2
-                        then filter p2 tail
-                        else p1::filter p2 tail
+                      then filter p2 tail
+                      else p1::filter p2 tail
 
     match points with
     | p1::p2::tail -> p1::filter p2 tail

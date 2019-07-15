@@ -7,7 +7,7 @@ open Formulas
 
 
 [<Fact>]
-let ``distance - between Moscow and Saint Petersburg - approximately equals 630km`` () =
+let ``distance - between Moscow and Saint Petersburg - approximately equals 635km`` () =
    let MoscowLatitude = 55.753960
    let MoscowLongitude = 37.620393
    let SaintPetersburgLatitude = 59.9386300
@@ -21,7 +21,7 @@ let ``distance - between Moscow and Saint Petersburg - approximately equals 630k
 
 
 [<Fact>]
-let ``distance - signle grade at equator - approximately eqauls 111km`` () =
+let ``distance - 1 grade at equator - approximately eqauls 111km`` () =
     let startLatitude = 0.0
     let startLongitude = 0.0
     let endLatitude = 0.0
@@ -34,11 +34,11 @@ let ``distance - signle grade at equator - approximately eqauls 111km`` () =
 
 
 [<Fact>]
-let ``velocity - with single grade per hour at equator - approximately equals 111km per hour`` () =
-    let startSensorItem = new SensorItem(0.0, 0.0, 0.0, 0.0, new DateTimeOffset(2019, 4, 26, 11, 00, 00, TimeSpan.Zero))
-    let endSensorItem = new SensorItem(0.0, 1.0, 0.0, 0.0, new DateTimeOffset(2019, 4, 26, 12, 00, 00, TimeSpan.Zero))
+let ``velocity - with 1 grade per hour at equator - approximately equals 111km per hour`` () =
+    let startItem = new SensorItem(0.0, 0.0, 0.0, 0.0, new DateTimeOffset(2019, 4, 26, 11, 00, 00, TimeSpan.Zero))
+    let endItem = new SensorItem(0.0, 1.0, 0.0, 0.0, new DateTimeOffset(2019, 4, 26, 12, 00, 00, TimeSpan.Zero))
 
-    let actual = velocity startSensorItem endSensorItem
+    let actual = velocity startItem endItem
 
     let expected = 111.0
     Assert.Equal(expected, actual, 0)

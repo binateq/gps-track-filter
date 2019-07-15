@@ -43,6 +43,20 @@ let internal smoothBySimplifiedKalman σξ ση (points: SensorItem list) =
   | [] -> []
   | p1::points -> p1::(recursive_filter (ση, ση) p1 points)
 
+
+let internal iterateKalman ξVariance ηVariance (latitude, longitude, timestamp: DateTimeOffset, error) (p: SensorItem) =
+    let a = error + ξVariance
+    let b = ηVariance
+    let K = a/(a + b)
+    let nextError = (a * b)/(a + b)
+    let Δt = (p.Timestamp - timestamp).TotalHours
+    let (latitudeVelocity, longitudeVelocity) = project latitude longitude p.Speed p.Heading
+    let nextLatitude = K * p.Latitude + (1.0 - K) * (latitude + latitudeVelocity * Δt)
+    let nextLongitude = K * p.Longitude + (1.0 - K) * (longitude + longitudeVelocity * Δt)
+
+    (nextLatitude, nextLongitude, p.Timestamp, nextError)
+
+
 /// <summary>
 /// Filters points based on specified standard deviations with Kalman filter.
 /// </summary>
@@ -53,23 +67,15 @@ let internal smoothBySimplifiedKalman σξ ση (points: SensorItem list) =
 /// <param name="ση">Sigma eta. Standard deviation of the GPS sensor.</param>
 /// <param name="points">Points after filtration.</param>
 let internal smoothByKalman σξ ση (points: SensorItem list) =
-    let iterateKalman (latitude, longitude, timestamp: DateTimeOffset, errorSquare) (p2: SensorItem) =
-        let a = errorSquare + σξ ** 2.0
-        let b = ση ** 2.0
-        let nextErrorSquare = (a * b)/(a + b)
-        let K = nextErrorSquare/b
-        let Δtime = (p2.Timestamp - timestamp).TotalHours
-        let (latitudeVelocity, longitudeVelocity) = projectSpeedOnAxis latitude longitude p2.Speed p2.Heading
-        let nextLatitude = K * p2.Latitude + (1.0 - K) * (latitude + latitudeVelocity * Δtime)
-        let nextLongitude = K * p2.Longitude + (1.0 - K) * (longitude + longitudeVelocity * Δtime)
-
-        (nextLatitude, nextLongitude, p2.Timestamp, nextErrorSquare)
+    let ξVariance = σξ ** 2.0
+    let ηVariance = ση ** 2.0
 
     match points with
     | [] -> []
-    | p1::tail -> let iterationBase = (p1.Latitude, p1.Longitude, p1.Timestamp, ση ** 2.0)
-                  let locations = tail
-                               |> List.scan iterateKalman iterationBase
-                               |> List.map (fun (latitude, longitude, timestamp, _) -> SensorItem(latitude, longitude, 0.0, 0.0, timestamp))
+    | p1::ps -> let first = (p1.Latitude, p1.Longitude, p1.Timestamp, ηVariance)
+                let smoothed = ps
+                            |> List.scan (iterateKalman ξVariance ηVariance) first
+                            |> List.map (fun (latitude, longitude, timestamp, _) ->
+                                         SensorItem(latitude, longitude, 0.0, 0.0, timestamp))
         
-                  SensorItem(p1.Latitude, p1.Longitude, 0.0, 0.0, p1.Timestamp)::locations
+                SensorItem(p1.Latitude, p1.Longitude, 0.0, 0.0, p1.Timestamp)::smoothed
