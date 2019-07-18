@@ -54,7 +54,7 @@ let internal velocity (p1: SensorItem) (p2: SensorItem) =
 let internal project latitude longitude speed heading =
     let cartesianAngleFromHeading =
         let flipHorizontal angle = 360.0 - angle
-        let rotateClockwise90 angle = (270.0 + angle) % 360.0
+        let rotateClockwise90 angle = angle - 90.0
         
         flipHorizontal >> rotateClockwise90
 

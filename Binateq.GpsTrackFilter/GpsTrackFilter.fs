@@ -44,7 +44,7 @@ type DirectedLocation(latitude: float, longitude: float, speed: float, heading: 
         member this.Heading = this.Heading
 
 /// <summary>
-/// Implements a few methods to fix bad GPS data.
+/// Implements a methods of fixation of GPS tracks.
 /// </summary>
 type GpsTrackFilter() =
     let mutable zeroSpeedDrift = 7.99
