@@ -49,8 +49,8 @@ type DirectedLocation(latitude: float, longitude: float, speed: float, heading: 
 type GpsTrackFilter() =
     let mutable zeroSpeedDrift = 7.99
     let mutable outlineSpeed = 110.0
-    let mutable modelPrecision = 2.13
-    let mutable sensorPrecision = 0.77
+    let mutable modelPrecision = 1.1
+    let mutable sensorPrecision = 0.1
 
 
     /// <summary>
@@ -136,10 +136,3 @@ type GpsTrackFilter() =
         |> smoothByKalman modelPrecision sensorPrecision
         |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
         :> IReadOnlyList<Location>
-
-    member __.Speeds(points: seq<Location>): IReadOnlyList<float * float * float> =
-           points
-        |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, 0.0, 0.0, x.Timestamp))
-        |> List.ofSeq
-        |> speeds
-        :> IReadOnlyList<float * float * float>
