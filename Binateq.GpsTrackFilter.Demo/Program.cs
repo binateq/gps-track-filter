@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -28,12 +29,26 @@ namespace Binateq.GpsTrackFilter.Demo
                     PrintFilteredDirections();
                     break;
 
+                case "speeds":
+                    PrintSpeeds();
+                    break;
+
                 default:
                     Console.WriteLine("Filters demo GPS track with bad data.");
                     Console.WriteLine("  demo rawlocs | rawdirs | fillocs | fildirs");
                     break;
             }
 
+        }
+
+        private static void PrintSpeeds()
+        {
+            var filter = new GpsTrackFilter();
+            var speeds = filter.Speeds(Examples.Locations);
+            //CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
+            foreach (var speed in speeds)
+                Console.WriteLine("{0}; {1}; {2}", speed.Item1, speed.Item2, speed.Item3);
         }
 
         private static void PrintRawLocations()

@@ -136,3 +136,10 @@ type GpsTrackFilter() =
         |> smoothByKalman modelPrecision sensorPrecision
         |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
         :> IReadOnlyList<Location>
+
+    member __.Speeds(points: seq<Location>): IReadOnlyList<float * float * float> =
+           points
+        |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, 0.0, 0.0, x.Timestamp))
+        |> List.ofSeq
+        |> speeds
+        :> IReadOnlyList<float * float * float>

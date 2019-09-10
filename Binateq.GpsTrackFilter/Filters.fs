@@ -12,7 +12,7 @@ let internal removeZeroOrNegativeTimespans points =
     let rec filter (p1: SensorItem) points =
         match points with
         | (p2: SensorItem)::tail -> let Δtime = p2.Timestamp - p1.Timestamp
-                                    if Δtime > TimeSpan.Zero && Δtime < TimeSpan.FromMinutes(30.0)
+                                    if Δtime > TimeSpan.Zero
                                     then p2::filter p2 tail
                                     else filter p1 tail
         | _ -> points
@@ -49,6 +49,7 @@ let internal removeOutlineSpeedValues hiLimit points =
 let internal removeZeroSpeedDrift loLimit points =
     let isZeroDriftSpeed p1 p2 =
         let velocity = velocity p1 p2
+        let Δtime = (p2.Timestamp - p1.Timestamp).TotalMinutes
 
         velocity < loLimit
 
@@ -65,3 +66,15 @@ let internal removeZeroSpeedDrift loLimit points =
     match points with
     | p1::p2::tail -> p1::filter p2 tail
     | _ -> points
+
+let internal speeds points =
+    let calc (p1: SensorItem, p2: SensorItem) =
+        let d = distance p1.Latitude p1.Longitude p2.Latitude p2.Longitude
+        let v = velocity p1 p2
+        let dt = (p2.Timestamp - p1.Timestamp).TotalHours
+
+        (d, v, dt)
+
+    points
+    |> List.pairwise
+    |> List.map calc
