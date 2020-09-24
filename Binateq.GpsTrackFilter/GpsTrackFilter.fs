@@ -49,8 +49,8 @@ type DirectedLocation(latitude: float, longitude: float, speed: float, heading: 
 type GpsTrackFilter() =
     let mutable zeroSpeedDrift = 7.99
     let mutable outlineSpeed = 110.0
-    let mutable modelPrecision = 1.7
-    let mutable sensorPrecision = 0.9
+    let mutable modelPrecision = 2.13
+    let mutable sensorPrecision = 0.77
 
 
     /// <summary>
