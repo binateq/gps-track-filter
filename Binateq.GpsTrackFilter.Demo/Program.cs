@@ -39,21 +39,21 @@ namespace Binateq.GpsTrackFilter.Demo
 
         private static void PrintRawLocations()
         {
-            PrintPoints(Examples.Locations
-                                .OfType<ILocation>());
+            PrintPoints(Examples.Locations);
         }
 
         private static void PrintRawDirections()
         {
-            PrintPoints(Examples.Directions
-                                .OfType<ILocation>());
+            var locations = Examples.Directions
+                 .Select(x => new Location(x.Latitude, x.Longitude, x.Timestamp));
+            
+            PrintPoints(locations);
         }
 
         private static void PrintFilteredLocations()
         {
             var filter = new GpsTrackFilter();
-            var track = filter.Filter(Examples.Locations)
-                              .OfType<ILocation>();
+            var track = filter.Filter(Examples.Locations);
             PrintPoints(track);
         }
 
@@ -61,11 +61,11 @@ namespace Binateq.GpsTrackFilter.Demo
         {
             var filter = new GpsTrackFilter();
             var track = filter.Filter(Examples.Directions)
-                              .OfType<ILocation>();
+                .Select(x => new Location(x.Latitude, x.Longitude, x.Timestamp));;
             PrintPoints(track);
         }
 
-        static void PrintPoints(IEnumerable<ILocation> points)
+        static void PrintPoints(IEnumerable<Location> points)
         {
             var multiLineString = new
             {

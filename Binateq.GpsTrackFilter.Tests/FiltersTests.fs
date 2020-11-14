@@ -1,9 +1,9 @@
 module FiltersTest
 
-open System
 open Xunit
 open Types
 open Filters
+open SensorItem
 
 
 [<Fact>]
@@ -17,65 +17,66 @@ let ``removeZeroOrNegativeTimespans - without points - returns empty list`` () =
 
 [<Fact>]
 let ``removeZeroOrNegativeTimespans - with single point - returns single point`` () =
-    let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
+    let source = [sensorItem 0.0 0.0 "2018-12-07T16:38:00+03:00"]
 
     let actual = removeZeroOrNegativeTimespans source
 
-    let expected = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
+    let expected = [sensorItem 0.0 0.0 "2018-12-07T16:38:00+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
 let ``removeZeroOrNegativeTimespans - with zero timespan - removes point`` () =
-    let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                  SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                  SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+    let source = [sensorItem 0.0 0.0 "2018-12-07T16:38:15+03:00"
+                  sensorItem 1.0 1.0 "2018-12-07T16:38:15+03:00"
+                  sensorItem 2.0 2.0 "2018-12-07T16:38:16+03:00"]
 
     let actual = removeZeroOrNegativeTimespans source
 
-    let expected = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                    SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+    let expected = [sensorItem 0.0 0.0 "2018-12-07T16:38:15+03:00"
+                    sensorItem 2.0 2.0 "2018-12-07T16:38:16+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
     
 
 [<Fact>]
 let ``removeZeroOrNegativeTimespans - with negative timespan - removes point`` () =
-    let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                  SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+    let source = [sensorItem 0.0 0.0 "2018-12-07T16:38:15+03:00"
+                  sensorItem 1.0 1.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 2.0 2.0 "2018-12-07T16:38:16+03:00"]
 
     let actual = removeZeroOrNegativeTimespans source
 
-    let expected = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                    SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+    let expected = [sensorItem 0.0 0.0 "2018-12-07T16:38:15+03:00"
+                    sensorItem 2.0 2.0 "2018-12-07T16:38:16+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
     
 
 [<Fact>]
-let ``removeZeroOrNegativeTimespans - with positime timespans - returns same list`` () =
-    let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                  SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+let ``removeZeroOrNegativeTimespans - with positive timespans - returns same list`` () =
+    let source = [sensorItem 0.0 0.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 1.0 1.0 "2018-12-07T16:38:15+03:00"
+                  sensorItem 2.0 2.0 "2018-12-07T16:38:16+03:00"]
 
     let actual = removeZeroOrNegativeTimespans source
 
-    let expected = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                    SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                    SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:16+03:00"))]
+    let expected = [sensorItem 0.0 0.0 "2018-12-07T16:38:14+03:00"
+                    sensorItem 1.0 1.0 "2018-12-07T16:38:15+03:00"
+                    sensorItem 2.0 2.0 "2018-12-07T16:38:16+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
 let ``removeZeroOrNegativeTimespans - with two negative timespans - removes both points`` () =
-    let source = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                  SensorItem(1.0, 1.0, 0.0, 0.0, DateTimeOffset.Parse("2018-11-07T16:38:16+03:00"));
-                  SensorItem(2.0, 2.0, 0.0, 0.0, DateTimeOffset.Parse("2018-11-07T16:38:17+03:00"));
-                  SensorItem(3.0, 3.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:18+03:00"))]
+    let source = [sensorItem 0.0 0.0 "2018-12-07T16:38:15+03:00"
+                  sensorItem 1.0 1.0 "2018-12-07T16:38:13+03:00"
+                  sensorItem 2.0 2.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 3.0 3.0 "2018-12-07T16:38:16+03:00"]
 
     let actual = removeZeroOrNegativeTimespans source
 
-    let expected = [SensorItem(0.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:15+03:00"));
-                    SensorItem(3.0, 3.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:18+03:00"))]
+    let expected = [sensorItem 0.0 0.0 "2018-12-07T16:38:15+03:00"
+                    sensorItem 3.0 3.0 "2018-12-07T16:38:16+03:00"]
+
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
@@ -93,38 +94,38 @@ let ``removeOutlineSpeedValues - without points - returns empty list`` () =
 
 [<Fact>]
 let ``removeOutlineSpeedValues - with single point - returns same list`` () =
-    let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
+    let source = [sensorItem 45.0 0.0 "2018-12-07T16:38:00+03:00"]
 
     let actual = removeOutlineSpeedValues oneDegreeOfMeridianInKm source
 
-    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
+    let expected = [sensorItem 45.0 0.0 "2018-12-07T16:38:00+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
 let ``removeOutlineSpeedValues - with outline speed - removes point`` () =
-    let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(46.1, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
-                  SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let source = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 46.1 0.0 "2018-12-07T17:38:14+03:00"
+                  sensorItem 47.0 0.0 "2018-12-07T18:38:16+03:00"]
 
     let actual = removeOutlineSpeedValues oneDegreeOfMeridianInKm source
 
-    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                    SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let expected = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                    sensorItem 47.0 0.0 "2018-12-07T18:38:16+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
 let ``removeOutlineSpeedValues - without outline speed - returns same list`` () =
-    let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(46.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
-                  SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let source = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 46.0 0.0 "2018-12-07T17:38:14+03:00"
+                  sensorItem 47.0 0.0 "2018-12-07T18:38:16+03:00"]
 
     let actual = removeOutlineSpeedValues oneDegreeOfMeridianInKm source
 
-    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                    SensorItem(46.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
-                    SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let expected = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                    sensorItem 46.0 0.0 "2018-12-07T17:38:14+03:00"
+                    sensorItem 47.0 0.0 "2018-12-07T18:38:16+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
@@ -139,48 +140,48 @@ let ``removeZeroSpeedDrift - without points - returns empty list`` () =
 
 [<Fact>]
 let ``removeZeroSpeedDrift - with single point - returns same list`` () =
-    let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
+    let source = [sensorItem 45.0 0.0 "2018-12-07T16:38:00+03:00"]
 
     let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
-    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:00+03:00"))]
+    let expected = [sensorItem 45.0 0.0 "2018-12-07T16:38:00+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
 let ``removeZeroSpeedDrift - with very small drift - removes drift points`` () =
-    let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(46.95, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
-                  SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let source = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 46.95 0.0 "2018-12-07T17:38:14+03:00"
+                  sensorItem 47.0 0.0 "2018-12-07T18:38:16+03:00"]
 
     let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
-    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                    SensorItem(47.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let expected = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                    sensorItem 47.0 0.0 "2018-12-07T18:38:16+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
 let ``removeZeroSpeedDrift - with very small drift - keeps two end points`` () =
-    let source = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"))]
+    let source = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 45.05 0.0 "2018-12-07T17:38:14+03:00"]
 
     let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
-    let expected = [SensorItem(45.0, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                    SensorItem(45.05, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"))]
+    let expected = [sensorItem 45.0 0.0 "2018-12-07T16:38:14+03:00"
+                    sensorItem 45.05 0.0 "2018-12-07T17:38:14+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)
 
 
 [<Fact>]
 let ``removeZeroSpeedDrift - without drift - returns same list`` () =
-    let source = [SensorItem(45.00, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                  SensorItem(45.15, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
-                  SensorItem(47.00, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let source = [sensorItem 45.00 0.0 "2018-12-07T16:38:14+03:00"
+                  sensorItem 45.15 0.0 "2018-12-07T17:38:14+03:00"
+                  sensorItem 47.00 0.0 "2018-12-07T18:38:16+03:00"]
 
     let actual = removeZeroSpeedDrift (oneDegreeOfMeridianInKm/10.0) source
 
-    let expected = [SensorItem(45.00, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T16:38:14+03:00"));
-                    SensorItem(45.15, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T17:38:14+03:00"));
-                    SensorItem(47.00, 0.0, 0.0, 0.0, DateTimeOffset.Parse("2018-12-07T18:38:16+03:00"))]
+    let expected = [sensorItem 45.00 0.0 "2018-12-07T16:38:14+03:00"
+                    sensorItem 45.15 0.0 "2018-12-07T17:38:14+03:00"
+                    sensorItem 47.00 0.0 "2018-12-07T18:38:16+03:00"]
     Assert.Equal<seq<SensorItem>>(expected, actual)

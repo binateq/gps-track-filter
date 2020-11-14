@@ -7,41 +7,51 @@ open Filters
 open Kalman
 open System.Collections.Generic
 
-type ILocation =
-    abstract member Latitude: float
-    abstract member Longitude: float
-    abstract member Timestamp: DateTimeOffset
-
-type IDirectedLocation =
-    inherit ILocation
-    abstract member Speed: float
-    abstract member Heading: float
-    
+/// <summary>
+/// Describes GPS track point with latitude, longitude, and timestamp.
+/// </summary>
 [<Struct>]
 type Location(latitude: float, longitude: float, timestamp: DateTimeOffset) =
+    /// <summary>
+    /// Latitude from -90 to +90 degrees.
+    /// </summary>
     member __.Latitude = latitude
+    /// <summary>
+    /// Longitude from -180 to +180 degrees.
+    /// </summary>
     member __.Longitude = longitude
+    /// <summary>
+    /// Date and time of measure.
+    /// </summary>
     member __.Timestamp = timestamp
 
-    interface ILocation with
-        member this.Latitude = this.Latitude
-        member this.Longitude = this.Longitude
-        member this.Timestamp = this.Timestamp
 
+/// <summary>
+/// Describes GPS track point with latitude, longitude, speed, heading, and timestamp.
+/// </summary>
 [<Struct>]
 type DirectedLocation(latitude: float, longitude: float, speed: float, heading: float, timestamp: DateTimeOffset) =
+    /// <summary>
+    /// Latitude from -90 to +90 degrees.
+    /// </summary>
     member __.Latitude = latitude
+    /// <summary>
+    /// Longitude from -180 to +180 degrees.
+    /// </summary>
     member __.Longitude = longitude
-    member __.Timestamp = timestamp
+    /// <summary>
+    /// Speed in meters per second.
+    /// <summary>
     member __.Speed = speed
+    /// <summary>
+    /// Speed direction related to North in degrees. Clockwise is positive.
+    /// </summary>
     member __.Heading = heading
+    /// <summary>
+    /// Date and time of measure.
+    /// </summary>
+    member __.Timestamp = timestamp
 
-    interface IDirectedLocation with
-        member this.Latitude = this.Latitude
-        member this.Longitude = this.Longitude
-        member this.Timestamp = this.Timestamp
-        member this.Speed = this.Speed
-        member this.Heading = this.Heading
 
 /// <summary>
 /// Implements a methods of fixation of GPS tracks.
@@ -51,6 +61,30 @@ type GpsTrackFilter() =
     let mutable outlineSpeed = 110.0
     let mutable modelPrecision = 2.13
     let mutable sensorPrecision = 0.77
+
+    
+    let fromLocation (x: Location) =
+        { Latitude = x.Latitude
+          Longitude = x.Longitude
+          Speed = 0.0
+          Heading = 0.0
+          Timestamp = x.Timestamp }
+
+
+    let fromTuple (latitude, longitude, timestamp: DateTimeOffset) =
+        { Latitude = latitude
+          Longitude = longitude
+          Speed = 0.0
+          Heading = 0.0
+          Timestamp = timestamp }
+
+        
+    let fromDirectedLocation (x: DirectedLocation) =
+        { Latitude = x.Latitude
+          Longitude = x.Longitude
+          Speed = x.Speed
+          Heading = x.Heading
+          Timestamp = x.Timestamp }
 
 
     /// <summary>
@@ -90,7 +124,7 @@ type GpsTrackFilter() =
     /// </returns>
     member __.Filter(points: seq<Location>): IReadOnlyList<Location> =
            points
-        |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, 0.0, 0.0, x.Timestamp))
+        |> Seq.map fromLocation
         |> List.ofSeq
         |> removeZeroOrNegativeTimespans
         |> removeZeroSpeedDrift zeroSpeedDrift
@@ -109,7 +143,7 @@ type GpsTrackFilter() =
     /// </returns>
     member __.Filter(points: seq<(float * float * DateTimeOffset)>): IReadOnlyList<(float * float * DateTimeOffset)> =
            points
-        |> Seq.map (fun (latitude, longitude, timestamp) -> SensorItem(latitude, longitude, 0.0, 0.0, timestamp))
+        |> Seq.map fromTuple
         |> List.ofSeq
         |> removeZeroOrNegativeTimespans
         |> removeZeroSpeedDrift zeroSpeedDrift
@@ -128,7 +162,7 @@ type GpsTrackFilter() =
     /// </returns>
     member __.Filter(points: seq<DirectedLocation>): IReadOnlyList<Location> =
            points
-        |> Seq.map (fun x -> SensorItem(x.Latitude, x.Longitude, x.Speed, x.Heading, x.Timestamp))
+        |> Seq.map fromDirectedLocation
         |> List.ofSeq
         |> removeZeroOrNegativeTimespans
         |> removeZeroSpeedDrift zeroSpeedDrift

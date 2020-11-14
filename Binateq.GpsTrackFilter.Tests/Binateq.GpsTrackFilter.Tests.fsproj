@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="SensorItem.fs" />
     <Compile Include="FormulasTests.fs" />
     <Compile Include="FiltersTests.fs" />
     <Compile Include="KalmanTests.fs" />

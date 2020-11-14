@@ -11,8 +11,8 @@ open Formulas
 let internal removeZeroOrNegativeTimespans points =
     let rec filter (p1: SensorItem) points =
         match points with
-        | (p2: SensorItem)::tail -> let Δtime = p2.Timestamp - p1.Timestamp
-                                    if Δtime > TimeSpan.Zero
+        | (p2: SensorItem)::tail -> let deltaTime = p2.Timestamp - p1.Timestamp
+                                    if deltaTime > TimeSpan.Zero
                                     then p2::filter p2 tail
                                     else filter p1 tail
         | _ -> points

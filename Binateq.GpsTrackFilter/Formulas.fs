@@ -38,19 +38,19 @@ let internal distance latitude1 longitude1 latitude2 longitude2 =
 /// Calculates the velocity in kilometers per hour by coordinates and timestamps.
 /// </summary>
 let internal velocity (p1: SensorItem) (p2: SensorItem) =
-    let Δtime = (p2.Timestamp - p1.Timestamp).TotalHours
-    let Δdistance = distance p1.Latitude p1.Longitude p2.Latitude p2.Longitude
+    let deltaTime = (p2.Timestamp - p1.Timestamp).TotalHours
+    let deltaDistance = distance p1.Latitude p1.Longitude p2.Latitude p2.Longitude
 
-    Δdistance/Δtime
+    deltaDistance/deltaTime
 
 
 /// <summary>
-/// Calcualates projection of velocity vector on specified meridian and parallel.
+/// Calculates projection of velocity vector on specified meridian and parallel.
 /// </summary>
 /// <param name="latitude">The latitude of parallel to projection.</param>
 /// <param name="longitude">The longitude of meridian to projection.</param>
 /// <param name="speed">The velocity module in meters per second.</param>
-/// <param name="heading">The velocity direction relatied to North in degrees.</param>
+/// <param name="heading">The velocity direction related to North in degrees.</param>
 let internal project latitude longitude speed heading =
     let cartesianAngleFromHeading =
         let flipHorizontal angle = 360.0 - angle
