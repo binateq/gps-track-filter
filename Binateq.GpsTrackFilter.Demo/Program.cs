@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
@@ -7,8 +8,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace Binateq.GpsTrackFilter.Demo
 {
-    class Program
+    internal static class Program
     {
+        [SuppressMessage("ReSharper", "StringLiteralTypo")]
         static void Main(string[] args)
         {
             switch (args.FirstOrDefault())
@@ -45,7 +47,7 @@ namespace Binateq.GpsTrackFilter.Demo
         private static void PrintRawDirections()
         {
             var locations = Examples.Directions
-                 .Select(x => new Location(x.Latitude, x.Longitude, x.Timestamp));
+                                    .Select(x => new Location(x.Latitude, x.Longitude, x.Timestamp));
             
             PrintPoints(locations);
         }
@@ -61,7 +63,7 @@ namespace Binateq.GpsTrackFilter.Demo
         {
             var filter = new GpsTrackFilter();
             var track = filter.Filter(Examples.Directions)
-                .Select(x => new Location(x.Latitude, x.Longitude, x.Timestamp));;
+                              .Select(x => new Location(x.Latitude, x.Longitude, x.Timestamp));;
             PrintPoints(track);
         }
 
