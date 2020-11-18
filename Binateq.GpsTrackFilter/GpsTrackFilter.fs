@@ -69,6 +69,10 @@ type GpsTrackFilter() =
           Speed = 0.0
           Heading = 0.0
           Timestamp = x.Timestamp }
+        
+        
+    let toLocation (x: SensorItem) =
+        Location(x.Latitude, x.Longitude, x.Timestamp)
 
 
     let fromTuple (latitude, longitude, timestamp: DateTimeOffset) =
@@ -77,6 +81,10 @@ type GpsTrackFilter() =
           Speed = 0.0
           Heading = 0.0
           Timestamp = timestamp }
+        
+        
+    let toTuple (x: SensorItem) =
+        (x.Latitude, x.Longitude, x.Timestamp)
 
         
     let fromDirectedLocation (x: DirectedLocation) =
@@ -85,6 +93,14 @@ type GpsTrackFilter() =
           Speed = x.Speed
           Heading = x.Heading
           Timestamp = x.Timestamp }
+        
+        
+    let filterValidPoints points =
+        points
+        |> List.ofSeq
+        |> removeZeroOrNegativeTimespans
+        |> removeZeroSpeedDrift zeroSpeedDrift
+        |> removeOutlineSpeedValues outlineSpeed
 
 
     /// <summary>
@@ -125,12 +141,9 @@ type GpsTrackFilter() =
     member __.Filter(points: seq<Location>): IReadOnlyList<Location> =
            points
         |> Seq.map fromLocation
-        |> List.ofSeq
-        |> removeZeroOrNegativeTimespans
-        |> removeZeroSpeedDrift zeroSpeedDrift
-        |> removeOutlineSpeedValues outlineSpeed
-        |> smoothBySimplifiedKalman modelPrecision sensorPrecision
-        |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
+        |> filterValidPoints
+        |> smoothByKalman nextPoint modelPrecision sensorPrecision
+        |> List.map toLocation
         :> IReadOnlyList<Location>
     
 
@@ -144,12 +157,9 @@ type GpsTrackFilter() =
     member __.Filter(points: seq<(float * float * DateTimeOffset)>): IReadOnlyList<(float * float * DateTimeOffset)> =
            points
         |> Seq.map fromTuple
-        |> List.ofSeq
-        |> removeZeroOrNegativeTimespans
-        |> removeZeroSpeedDrift zeroSpeedDrift
-        |> removeOutlineSpeedValues outlineSpeed
-        |> smoothBySimplifiedKalman modelPrecision sensorPrecision
-        |> List.map (fun x -> (x.Latitude, x.Longitude, x.Timestamp))
+        |> filterValidPoints
+        |> smoothByKalman nextPoint modelPrecision sensorPrecision
+        |> List.map toTuple
         :> IReadOnlyList<(float * float * DateTimeOffset)>
 
 
@@ -163,10 +173,7 @@ type GpsTrackFilter() =
     member __.Filter(points: seq<DirectedLocation>): IReadOnlyList<Location> =
            points
         |> Seq.map fromDirectedLocation
-        |> List.ofSeq
-        |> removeZeroOrNegativeTimespans
-        |> removeZeroSpeedDrift zeroSpeedDrift
-        |> removeOutlineSpeedValues outlineSpeed
-        |> smoothByKalman modelPrecision sensorPrecision
-        |> List.map (fun x -> Location(x.Latitude, x.Longitude, x.Timestamp))
+        |> filterValidPoints
+        |> smoothByKalman nextPointWithVelocity modelPrecision sensorPrecision
+        |> List.map toLocation
         :> IReadOnlyList<Location>
