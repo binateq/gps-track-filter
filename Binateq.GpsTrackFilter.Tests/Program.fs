@@ -1,1 +1,4 @@
-module Program = let [<EntryPoint>] main _ = 0
+namespace Binateq.GpsTrackFilter.Tests
+
+module Program =
+    let [<EntryPoint>] main _ = 0
