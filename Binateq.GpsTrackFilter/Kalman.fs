@@ -33,7 +33,7 @@ let internal calculateNextSquareError modelVariance sensorVariance squareError =
 /// <param name="k">Interpolation coefficient in interval [0; 1].</param>
 /// <param name="value1">First value.</param>
 /// <param name="value2">Second value.</param>
-/// <returns>Interpolated value.<returns>. 
+/// <returns>Interpolated value.</returns>. 
 let internal interpolate k value1 value2 =
   k * value1 + (1.0 - k) * value2
 

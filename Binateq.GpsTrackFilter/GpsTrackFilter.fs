@@ -16,10 +16,12 @@ type Location(latitude: float, longitude: float, timestamp: DateTimeOffset) =
     /// Latitude from -90 to +90 degrees.
     /// </summary>
     member __.Latitude = latitude
+
     /// <summary>
     /// Longitude from -180 to +180 degrees.
     /// </summary>
     member __.Longitude = longitude
+
     /// <summary>
     /// Date and time of measure.
     /// </summary>
@@ -35,18 +37,22 @@ type DirectedLocation(latitude: float, longitude: float, speed: float, heading: 
     /// Latitude from -90 to +90 degrees.
     /// </summary>
     member __.Latitude = latitude
+
     /// <summary>
     /// Longitude from -180 to +180 degrees.
     /// </summary>
     member __.Longitude = longitude
+
     /// <summary>
     /// Speed in meters per second.
-    /// <summary>
+    /// </summary>
     member __.Speed = speed
+
     /// <summary>
     /// Speed direction related to North in degrees. Clockwise is positive.
     /// </summary>
     member __.Heading = heading
+
     /// <summary>
     /// Date and time of measure.
     /// </summary>

@@ -17,7 +17,7 @@ type internal SensorItem =
        
        /// <summary>
        /// Speed in meters per second.
-       /// <summary>
+       /// </summary>
        Speed: float
        
        /// <summary>

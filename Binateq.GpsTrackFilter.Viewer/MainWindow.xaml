@@ -1,0 +1,193 @@
+﻿<Window 
+    x:Class="Binateq.GpsTrackFilter.Viewer.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mapControl="clr-namespace:MapControl;assembly=MapControl.WPF"
+    mc:Ignorable="d"
+    Title="GPS Track Filter Viewer" Height="450" Width="800">
+
+    <Window.Resources>
+        <DataTemplate x:Key="RawPolylineItemTemplate">
+            <mapControl:MapPolyline Locations="{Binding Locations}" Stroke="Red" StrokeThickness="5"/>
+        </DataTemplate>
+        <DataTemplate x:Key="FilteredPolylineItemTemplate">
+            <mapControl:MapPolyline Locations="{Binding Locations}" Stroke="Blue" StrokeThickness="5"/>
+        </DataTemplate>
+        <mapControl:WebMercatorProjection x:Key="WebMercatorProjection"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid 
+            Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer
+                Grid.Row="0" 
+                Grid.Column="0"
+                Grid.ColumnSpan="2" 
+                Loaded="InstScroll_Loaded" 
+                Name="instScroll" 
+                PanningMode="VerticalOnly" 
+                VerticalScrollBarVisibility="Visible" 
+                CanContentScroll="True">
+                <ListView Name="listview" ItemsSource="{Binding CachedTracks}" SelectionChanged="SelectorOnSelected" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5" Orientation="Horizontal">
+                                <TextBlock FontSize="16" Text="{Binding Path=Id}" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+
+            <Grid 
+                Grid.Row="1"
+                Grid.Column="0" 
+                Grid.ColumnSpan="2"
+                Margin="0, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock 
+                    Grid.Row="0" 
+                    Grid.Column="0"
+                    Margin="5,0"
+                    Text="{Binding CurrentTrackId, StringFormat={}Selected Id: {0}}"/>
+
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="ModelPrecision" Margin="5,0"/>
+                    <TextBox Text="{Binding ModelPrecisionTextField}" Margin="5,0"/>
+
+                    <TextBlock Text="OutlineSpeed" Margin="5,0"/>
+                    <TextBox Text="{Binding OutlineSpeedTextField}" Margin="5,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="SensorPrecision" Margin="5,0"/>
+                    <TextBox Text="{Binding SensorPrecisionTextField}" Margin="5,0"/>
+
+                    <TextBlock Text="ZeroSpeedDrift" Margin="5,0"/>
+                    <TextBox Text="{Binding ZeroSpeedDriftTextField}" Margin="5,0"/>                
+                </StackPanel>
+                <Button 
+                    Grid.Row="2"
+                    Grid.Column="0" 
+                    Grid.ColumnSpan="2" 
+                    Content="Reset to defaults" 
+                    Command="{Binding ResetToDefaultCommand}" 
+                    Margin="0,7,0,7"/>
+                <Button 
+                    Grid.Row="3"
+                    Grid.Column="0" 
+                    Grid.ColumnSpan="2" 
+                    Content="Apply parameters" 
+                    Command="{Binding ApplyParametersCommand}" 
+                    Padding="7,7,7,7"/>
+            </Grid>
+
+            <Grid
+                Grid.Row="2" 
+                Grid.Column="0" 
+                Grid.ColumnSpan="2"
+                Margin="0, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0" Grid.Row="0">
+                    <TextBlock Text="Origin" Margin="5,0"/>
+                    <TextBlock  Text="{Binding OriginDuration}" Margin="5,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="1">
+                    <TextBlock Text="Raw" Margin="5,0"/>
+                    <TextBlock Text="{Binding RawMeters, StringFormat={}{0} meters}" Margin="5,0"/>
+                    <TextBlock  Text="{Binding RawDuration}" Margin="5,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="1">
+                    <TextBlock Text="Filtered" Margin="5,0"/>
+                    <TextBlock Text="{Binding FilteredMeters, StringFormat={}{0} meters}" Margin="5,0"/>
+                    <TextBlock Text="{Binding FilteredDuration}" Margin="5,0"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel
+                Grid.Row="3"
+                Grid.Column="0" 
+                Grid.ColumnSpan="2"
+                Margin="0, 10">
+                <TextBlock Text="Coordinates" Margin="5,0"/>
+                <TextBlock x:Name="MouseCoordinates" Margin="5,0" FontFamily="Segoe UI Mono"/>
+            </StackPanel>
+        </Grid>
+
+        <mapControl:Map 
+            x:Name="map"
+            Grid.Column="1" 
+            ZoomLevel="{Binding ZoomLevel}" 
+            MaxZoomLevel="20"
+            Center="{Binding MapCenter}"
+            MapLayer="{Binding MapLayers.CurrentMapLayer}"
+            MapProjection="{Binding SelectedValue, ElementName=projectionComboBox,
+                            FallbackValue={StaticResource WebMercatorProjection},
+                            TargetNullValue={StaticResource WebMercatorProjection}}"
+            MouseLeftButtonDown="MapMouseLeftButtonDown"
+            MouseMove="MapMouseMove" MouseLeave="MapMouseLeave"
+            ManipulationInertiaStarting="MapManipulationInertiaStarting">
+
+            <mapControl:MapGraticule 
+                x:Name="mapGraticule" 
+                Opacity="0.6"/>
+            <mapControl:MapScale 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom"/>
+
+            <mapControl:Pushpin 
+                mapControl:MapPanel.Location="{Binding Start}" 
+                Content="Start"/>
+            <mapControl:Pushpin 
+                mapControl:MapPanel.Location="{Binding End}" 
+                Content="End"/>
+
+            <mapControl:MapItemsControl 
+                ItemsSource="{Binding RawPolyline}"
+                ItemTemplate="{StaticResource RawPolylineItemTemplate}"/>
+            <mapControl:MapItemsControl 
+                ItemsSource="{Binding FilteredPolyline}" 
+                ItemTemplate="{StaticResource FilteredPolylineItemTemplate}"/>
+
+        </mapControl:Map>
+    </Grid>
+</Window>
