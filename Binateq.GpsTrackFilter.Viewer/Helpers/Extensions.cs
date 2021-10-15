@@ -204,6 +204,11 @@
             var lastDeviceLocation = deviceLocations[0];
             foreach (var deviceLocation in deviceLocations)
             {
+                // todo: Убрать после отладки
+                if (double.IsNaN(deviceLocation.Latitude))
+                    meters += lastDeviceLocation.GetDistanceTo(deviceLocation);
+                else
+                    meters += lastDeviceLocation.GetDistanceTo(deviceLocation);
                 meters += lastDeviceLocation.GetDistanceTo(deviceLocation);
                 duration += deviceLocation.Timestamp - lastDeviceLocation.Timestamp;
                 lastDeviceLocation = deviceLocation;

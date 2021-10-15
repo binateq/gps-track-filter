@@ -65,3 +65,13 @@ let internal removeZeroSpeedDrift loLimit points =
     match points with
     | p1::p2::ps -> filter3 p1 p2 ps
     | _ -> points
+
+
+/// <summary>
+/// Removes points with not numbers in latitude, longitude, heading, and speed.
+/// </summary>
+let internal removeNotNumbers points =
+    List.filter (fun x -> Double.IsNormal(x.Latitude)
+                       && Double.IsNormal(x.Longitude)
+                       && Double.IsNormal(x.Heading)
+                       && Double.IsNormal(x.Speed)) points

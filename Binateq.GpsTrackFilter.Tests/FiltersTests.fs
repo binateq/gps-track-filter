@@ -2,6 +2,7 @@ namespace Binateq.GpsTrackFilter.Tests
 
 module FiltersTest =
 
+    open System
     open Xunit
     open Types
     open Filters
@@ -187,3 +188,33 @@ module FiltersTest =
                         sensorItem 45.15 0.0 "2018-12-07T17:38:14+03:00"
                         sensorItem 47.00 0.0 "2018-12-07T18:38:16+03:00"]
         Assert.Equal<seq<SensorItem>>(expected, actual)
+
+
+    [<Fact>]
+    let ``removeNonNumbers - with NaN - removes NaN`` () =
+        let source = [sensorItem Double.NaN 1.0 "2018-12-07T16:38:14+03:00"
+                      sensorItem 1.0 Double.NaN "2018-12-07T16:38:15+03:00"]
+
+        let actual = removeNotNumbers source
+
+        Assert.Empty(actual)
+        
+
+    [<Fact>]
+    let ``removeNonNumbers - with infinity - removes infinity`` () =
+        let source = [sensorItem Double.PositiveInfinity 1.0 "2018-12-07T16:38:14+03:00"
+                      sensorItem 1.0 Double.NegativeInfinity "2018-12-07T16:38:15+03:00"]
+        
+        let actual = removeNotNumbers source
+        
+        Assert.Empty(actual)
+
+
+    [<Fact>]
+    let ``removeNonNumbers - with subnormals - removes subnormals`` () =
+        let source = [sensorItem 1e-38 1.0 "2018-12-07T16:38:14+03:00"
+                      sensorItem 1.0 1e-38 "2018-12-07T16:38:15+03:00"]
+
+        let actual = removeNotNumbers source
+
+        Assert.Empty(actual)

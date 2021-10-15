@@ -104,6 +104,7 @@ type GpsTrackFilter() =
     let filterValidPoints points =
         points
         |> List.ofSeq
+        |> removeNotNumbers
         |> removeZeroOrNegativeTimespans
         |> removeZeroSpeedDrift zeroSpeedDrift
         |> removeOutlineSpeedValues outlineSpeed
