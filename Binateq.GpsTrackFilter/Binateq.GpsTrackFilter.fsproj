@@ -11,11 +11,11 @@
     <RepositoryUrl>https://github.com/binateq/gps-track-filter.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>GPS, filtration, stabilization, Kalman</PackageTags>
-    <PackageReleaseNotes>Fix assembly, file, and package versions.</PackageReleaseNotes>
-    <Version>2.1.1</Version>
-    <AssemblyVersion>2.1.1.0</AssemblyVersion>
-    <FileVersion>2.1.1.0</FileVersion>
-    <PackageVersion>2.1.1</PackageVersion>
+    <PackageReleaseNotes>NaN filtration added.</PackageReleaseNotes>
+    <Version>2.2.0</Version>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
+    <PackageVersion>2.2.0</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
