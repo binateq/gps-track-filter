@@ -211,7 +211,7 @@ module FiltersTest =
 
 
     [<Fact>]
-    let ``removeNonNumbers - with subnormals - removes subnormals`` () =
+    let ``removeNonNumbers - with sub-normals - removes sub-normals`` () =
         let source = [sensorItem 1e-38 1.0 "2018-12-07T16:38:14+03:00"
                       sensorItem 1.0 1e-38 "2018-12-07T16:38:15+03:00"]
 
