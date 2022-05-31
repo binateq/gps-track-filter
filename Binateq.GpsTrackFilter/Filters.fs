@@ -67,11 +67,15 @@ let internal removeZeroSpeedDrift loLimit points =
     | _ -> points
 
 
+let internal isValidDouble value =
+    Double.IsFinite(value) && not (Double.IsSubnormal(value))
+
+
 /// <summary>
 /// Removes points with not numbers in latitude, longitude, heading, and speed.
 /// </summary>
 let internal removeNotNumbers points =
-    List.filter (fun x -> Double.IsNormal(x.Latitude)
-                       && Double.IsNormal(x.Longitude)
-                       && Double.IsNormal(x.Heading)
-                       && Double.IsNormal(x.Speed)) points
+    List.filter (fun x -> isValidDouble x.Latitude
+                       && isValidDouble x.Longitude
+                       && isValidDouble x.Heading
+                       && isValidDouble x.Speed) points
