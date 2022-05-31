@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Mark Shevchenko</Authors>
     <Company>Binateq</Company>
     <Description>Implements a few methods of stabilization and filtration of GPS tracks.</Description>
-    <Copyright>Copyright (c) 2018–2020 Binateq</Copyright>
+    <Copyright>Copyright (c) 2018–2022 Binateq</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/binateq/gps-track-filter</PackageProjectUrl>
     <RepositoryUrl>https://github.com/binateq/gps-track-filter.git</RepositoryUrl>
