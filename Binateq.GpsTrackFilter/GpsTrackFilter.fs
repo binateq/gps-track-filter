@@ -1,11 +1,11 @@
 ﻿namespace Binateq.GpsTrackFilter
 
 open System
+open System.Collections.Generic
 open Microsoft.FSharp.Collections
 open Types
 open Filters
 open Kalman
-open System.Collections.Generic
 
 /// <summary>
 /// Describes GPS track point with latitude, longitude, and timestamp.
