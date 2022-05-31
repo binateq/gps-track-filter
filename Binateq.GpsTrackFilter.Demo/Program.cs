@@ -34,6 +34,14 @@ namespace Binateq.GpsTrackFilter.Demo
                 default:
                     Console.WriteLine("Filters demo GPS track with bad data.");
                     Console.WriteLine("  demo rawlocs | rawdirs | fillocs | fildirs");
+                    Console.WriteLine("  rawlocs -- locations (latitude and longitude)");
+                    Console.WriteLine("             before filtration");
+                    Console.WriteLine("  rawdirs -- directions (lat, long, and direction)");
+                    Console.WriteLine("             before filtration");
+                    Console.WriteLine("  fillocs -- locations (latitude and longitude)");
+                    Console.WriteLine("             after filtration");
+                    Console.WriteLine("  fildirs -- locations (lat, long, and direction)");
+                    Console.WriteLine("             after filtration");
                     break;
             }
 
