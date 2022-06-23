@@ -4,18 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Mark Shevchenko</Authors>
     <Company>Binateq</Company>
-    <Description>Implements a few methods of stabilization and filtration of GPS tracks.</Description>
+    <Description>Implements methods of stabilization and filtration of GPS tracks.</Description>
     <Copyright>Copyright (c) 2018–2022 Binateq</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/binateq/gps-track-filter</PackageProjectUrl>
     <RepositoryUrl>https://github.com/binateq/gps-track-filter.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>GPS, filtration, stabilization, Kalman</PackageTags>
-    <PackageReleaseNotes>Fixed problem with NaN filtration.</PackageReleaseNotes>
-    <Version>2.3.0</Version>
-    <AssemblyVersion>2.3.0.0</AssemblyVersion>
-    <FileVersion>2.3.0.0</FileVersion>
-    <PackageVersion>2.3.0</PackageVersion>
+    <PackageReleaseNotes>Newtonsoft.Json has updated.</PackageReleaseNotes>
+    <Version>2.3.1</Version>
+    <AssemblyVersion>2.3.1.0</AssemblyVersion>
+    <FileVersion>2.3.1.0</FileVersion>
+    <PackageVersion>2.3.1</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
